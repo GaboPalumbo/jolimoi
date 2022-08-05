@@ -2,18 +2,19 @@
   <div class="baseview" v-bind:style="getColor(color)">
     <form id="search" v-on:submit.prevent="checkForm">
       <input type="search" name="field" id="field" v-model="field" :placeholder="msg">
-      <input type="submit" value="Search" :disabled="(this.field.length < 2)">
+      <input type="submit" value="Search" :disabled="(this.field.trim().length < 2) || isDisabled">
       <p v-if="errorsList.length">
-      <ul>
+      <ul class="errors">
         <li v-for="error in errorsList" :key="error">{{ error }}</li>
       </ul>
       </p>
-      <p v-if="!errors.length && products.length">
+      <p v-if="!errorsList.length && products.length">
       <ul>
         <li v-for="product in products" :key="product.id"><b>{{ product.brand }}</b> - <span>{{ product.name }}</span>
         </li>
       </ul>
       </p>
+      <div v-if="isDisabled" class="lds-dual-ring"></div>
     </form>
   </div>
 </template>
@@ -40,9 +41,12 @@ export default {
       let url = "https://thawing-scrubland-03171.herokuapp.com/https://skincare-api.herokuapp.com/products?q=";
       url += this.field;
       url += "&limit=25&page=1";
+
+      this.isDisabled = true;
       axios
         .get(url)
         .then(response => {
+          this.isDisabled = false;
           this.errorsList = [];
           this.products = [];
           if (!response) {
@@ -57,7 +61,7 @@ export default {
 
           this.products = response.data;
         })
-        .catch(error => {console.log(error); this.errorsList.push(this.errors[2])})
+        .catch(error => { this.isDisabled = false; console.log(error); this.errorsList.push(this.errors[2]) })
     }
   }
 }
@@ -104,11 +108,66 @@ ul {
   color: white;
 }
 
+.errors {
+  color: rgb(251, 5, 5);
+}
+
 li:first-letter {
   text-transform: uppercase;
 }
 
 span:first-letter {
   text-transform: uppercase;
+}
+
+.lds-dual-ring {
+  width: 50px;
+  height: 50px;
+  margin: auto;
+  margin-top: 20px;
+
+}
+
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 34px;
+  height: 34px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+@media only screen and (max-width: 600px) {
+
+  form {
+    margin-top: 15px;
+  }
+
+  input {
+    margin-right: 5px;
+  }
+
+  input[type="search"] {
+    width: 270px;
+  }
+
+  input[type="submit"] {
+    margin-left: 5px;
+    margin-right: 0px;
+  }
 }
 </style>

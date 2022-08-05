@@ -56,26 +56,30 @@ h1 {
   .section {
     display: block;
     width: 100%;
-    height: 33vh;
+    height: 34vh;
     overflow: hidden;
   }
 
   .section>img {
-        height: auto;
+    height: auto;
     margin: auto;
     padding: 0;
     display: block;
     width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
-   h1 {
+  h1 {
     font-size: 18px;
     position: absolute;
-    top:50%;
-    left:50%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
   }
 }
+
 @media only screen and (max-width: 360px) {
   .section>img {
     height: 100%;
