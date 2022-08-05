@@ -3,9 +3,9 @@
     <form id="search" v-on:submit.prevent="checkForm">
       <input type="search" name="field" id="field" v-model="field" :placeholder="msg">
       <input type="submit" value="Search" :disabled="(this.field.length < 2)">
-      <p v-if="errors.length">
+      <p v-if="errorsList.length">
       <ul>
-        <li v-for="error in errors" :key="error">{{ error }}</li>
+        <li v-for="error in errorsList" :key="error">{{ error }}</li>
       </ul>
       </p>
       <p v-if="!errors.length && products.length">
@@ -28,6 +28,8 @@ export default {
   data: function () {
     return {
       errors: [],
+      errorsList: [],
+      limit: 0,
       products: [],
       isDisabled: false,
       field: ''
@@ -41,21 +43,21 @@ export default {
       axios
         .get(url)
         .then(response => {
-          this.errors = [];
+          this.errorsList = [];
           this.products = [];
           if (!response) {
-            this.errors.push("sorry no results founded!")
+            this.errorsList.push(this.errors[0])
             return;
           }
 
-          if (response.data.length > 1000) {
-            this.errors.push("too many products are founded with these criteria, please make a more specific research")
+          if (response.data.length > this.limit) {
+            this.errorsList.push(this.errors[1])
             return;
           }
 
           this.products = response.data;
         })
-        .catch(error => console.log(error))
+        .catch(error => {console.log(error); this.errorsList.push(this.errors[2])})
     }
   }
 }

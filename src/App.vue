@@ -2,7 +2,7 @@
   <div id="app">
     <Header msg="This is a page for<br>beauty product search" color="#55D7FF" img="beauty-products.jpg"
       alt="search beauty product image" />
-    <SearchProducts color="#DB0992" msg="Search by product or brand name" />
+    <SearchProducts color="#DB0992" msg="Search by product or brand name" :errors="errors" limit="1000"/>
   </div>
 </template>
 
@@ -17,6 +17,14 @@ export default {
     Header,
     SearchProducts,
     BaseView
+  },
+  data() {
+    return {
+      errors: ["sorry no results founded!",
+        "too many products are matched these criteria, please make a more specific research",
+        "sorry we couldn't complete your request"
+      ]
+    }
   }
 }
 </script>
