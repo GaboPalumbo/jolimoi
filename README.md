@@ -1,0 +1,2 @@
+# jolimoi
+test for jolimoi
