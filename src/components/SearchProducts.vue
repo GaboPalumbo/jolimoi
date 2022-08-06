@@ -202,7 +202,7 @@ span:first-letter {
   }
 
   .products{
-    width: 80%;
+    width: 330px;
   }
 }
 </style>
