@@ -2,7 +2,7 @@
   <div id="app">
     <Header msg="This is a page for<br>beauty product search" color="#55D7FF" img="beauty-products.jpg"
       alt="search beauty product image" />
-    <SearchProducts color="#DB0992" msg="Search by product or brand name" :errorsList="errors" limit="1000"/>
+    <SearchProducts color="#DB0992" msg="Search by product or brand name" :errors="errors" :limit="3000"/>
   </div>
 </template>
 

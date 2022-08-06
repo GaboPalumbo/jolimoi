@@ -9,7 +9,7 @@
       </ul>
       </p>
       <p v-if="!errorsList.length && products.length">
-      <ul>
+      <ul class="products" >
         <li v-for="product in products" :key="product.id"><b>{{ product.brand }}</b> - <span>{{ product.name }}</span>
         </li>
       </ul>
@@ -26,11 +26,13 @@ import axios from 'axios';
 export default {
   name: 'SearchProducts',
   extends: BaseView,
+  props: {
+    errors: Array,
+    limit: Number,
+  },
   data: function () {
     return {
-      errors: [],
       errorsList: [],
-      limit: 0,
       products: [],
       isDisabled: false,
       field: ''
@@ -39,8 +41,12 @@ export default {
   methods: {
     checkForm() {
       let url = "https://thawing-scrubland-03171.herokuapp.com/https://skincare-api.herokuapp.com/products?q=";
-      url += this.field;
-      url += "&limit=25&page=1";
+
+      let keywords = this.field.split("");
+
+      keywords.forEach(element => {
+        url += element;
+      });
 
       this.isDisabled = true;
       axios
@@ -49,6 +55,7 @@ export default {
           this.isDisabled = false;
           this.errorsList = [];
           this.products = [];
+
           if (!response) {
             this.errorsList.push(this.errors[0])
             return;
@@ -59,7 +66,16 @@ export default {
             return;
           }
 
-          this.products = response.data;
+          response.data.forEach(element => {
+            let product ={
+              id:element.id,
+              brand:element.brand,
+              name:element.name
+            }
+            this.products.push(product);
+          });
+          console.log(response.data);
+          //this.products = response.data;
         })
         .catch(error => { this.isDisabled = false; console.log(error); this.errorsList.push(this.errors[2]) })
     }
@@ -109,7 +125,22 @@ ul {
 }
 
 .errors {
-  color: rgb(251, 5, 5);
+  color: white;
+  font-size: 12px;
+  font-style: italic;
+  width: 80%;
+  margin: auto;
+  text-align: center;
+  padding-inline-start: 0px;
+  margin-block-start: 0px;
+  list-style-type: none;
+}
+.products{
+    width: 450px;
+    margin: auto;
+    font-size: 12px;
+    line-height: 15px;
+    padding-inline-start: 0px;
 }
 
 li:first-letter {
@@ -168,6 +199,10 @@ span:first-letter {
   input[type="submit"] {
     margin-left: 5px;
     margin-right: 0px;
+  }
+
+  .products{
+    width: 80%;
   }
 }
 </style>
