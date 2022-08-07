@@ -74,8 +74,7 @@ export default {
             }
             this.products.push(product);
           });
-          console.log(response.data);
-          //this.products = response.data;
+          
         })
         .catch(error => { this.isDisabled = false; console.log(error); this.errorsList.push(this.errors[2]) })
     }
