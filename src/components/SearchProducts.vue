@@ -9,7 +9,7 @@
       </ul>
       </p>
       <p v-if="!errorsList.length && products.length">
-      <ul class="products" >
+      <ul class="products">
         <li v-for="product in products" :key="product.id"><b>{{ product.brand }}</b> - <span>{{ product.name }}</span>
         </li>
       </ul>
@@ -40,21 +40,30 @@ export default {
   },
   methods: {
     checkForm() {
+
+      this.errorsList = [];
+      this.products = [];
+
       let url = "https://thawing-scrubland-03171.herokuapp.com/https://skincare-api.herokuapp.com/products?q=";
-
       let keywords = this.field.split("");
+      let keywords_string = "";
+      for (let i = 0; i < keywords.length; i++) {
+        if (keywords[i].length > 1)
+          keywords_string += keywords[i];
+      }
 
-      keywords.forEach(element => {
-        url += element;
-      });
+      console.log(keywords_string);
+
+      if (keywords_string.length < 1) {
+        this.errorsList.push(this.errors[1])
+        return;
+      }
 
       this.isDisabled = true;
       axios
         .get(url)
         .then(response => {
           this.isDisabled = false;
-          this.errorsList = [];
-          this.products = [];
 
           if (!response) {
             this.errorsList.push(this.errors[0])
@@ -65,16 +74,16 @@ export default {
             this.errorsList.push(this.errors[1])
             return;
           }
-
-          response.data.forEach(element => {
-            let product ={
-              id:element.id,
-              brand:element.brand,
-              name:element.name
+          for (let i = 0; i < response.data.length; i++) {
+            let element = response.data[i];
+            let product = {
+              id: element.id,
+              brand: element.brand,
+              name: element.name
             }
             this.products.push(product);
-          });
-          
+          }
+
         })
         .catch(error => { this.isDisabled = false; console.log(error); this.errorsList.push(this.errors[2]) })
     }
@@ -134,12 +143,13 @@ ul {
   margin-block-start: 0px;
   list-style-type: none;
 }
-.products{
-    width: 450px;
-    margin: auto;
-    font-size: 12px;
-    line-height: 15px;
-    padding-inline-start: 0px;
+
+.products {
+  width: 380px;
+  margin: auto;
+  font-size: 12px;
+  line-height: 15px;
+  padding-inline-start: 0px;
 }
 
 li:first-letter {
@@ -200,7 +210,7 @@ span:first-letter {
     margin-right: 0px;
   }
 
-  .products{
+  .products {
     width: 330px;
   }
 }
