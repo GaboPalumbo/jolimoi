@@ -48,15 +48,19 @@ export default {
       let keywords = this.field.split("");
       let keywords_string = "";
       for (let i = 0; i < keywords.length; i++) {
-        if (keywords[i].length > 1)
-          keywords_string += keywords[i];
-      }
+        if (keywords[i].length > 1) {
+          if (i > 0)
+            keywords_string += "+"
 
-      console.log(keywords_string);
+          keywords_string += keywords[i];
+        }
+      }
 
       if (keywords_string.length < 1) {
         this.errorsList.push(this.errors[1])
         return;
+      } else {
+        url += keywords_string;
       }
 
       this.isDisabled = true;
